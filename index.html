@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Neon Snake</title>
+    <title>utkarsh ki nagin ex</title>
     <style>
         /* CSS for Styling and Animations */
         body {
@@ -51,7 +51,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 1s;
             display: none;
         }
 
@@ -194,7 +194,7 @@
             if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
                 clearInterval(gameInterval);
                 restartBtn.style.display = "block";
-                alert("Game Over! Your Score: " + score + " | High Score: " + highScore);
+                alert("Game over laadle! Your Score: " + score + " | High Score: " + highScore);
             }
 
             snake.unshift(newHead);
@@ -216,3 +216,4 @@
     </script>
 </body>
 </html>
+
