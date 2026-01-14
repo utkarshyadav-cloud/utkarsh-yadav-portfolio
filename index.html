@@ -2,77 +2,217 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Utkarsh Snake Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Neon Snake</title>
     <style>
-        body { background: #1a1a1a; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        canvas { border: 4px solid #fff; background: #000; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        h1 { margin-bottom: 10px; }
+        /* CSS for Styling and Animations */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: #0f0f0f;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        h1 {
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+            margin-bottom: 10px;
+        }
+
+        #game-container {
+            position: relative;
+            border: 5px solid #333;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+            border-radius: 10px;
+            touch-action: none; /* Prevent scrolling on touch */
+        }
+
+        canvas {
+            display: block;
+            background-color: #000;
+        }
+
+        .stats {
+            margin-top: 15px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        #restart-btn {
+            margin-top: 15px;
+            padding: 10px 25px;
+            font-size: 18px;
+            background: #00ff00;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: none;
+        }
+
+        #restart-btn:hover {
+            background: #00cc00;
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
-    <h1>Snake Game</h1>
-    <canvas id="snake" width="400" height="400"></canvas>
-    <p>Use Arrow Keys to Play!</p>
+
+    <h1>NEON SNAKE</h1>
+    <div id="game-container">
+        <canvas id="snakeGame" width="400" height="400"></canvas>
+    </div>
+    
+    <div class="stats">Score: <span id="score">0</span> | High Score: <span id="highScore">0</span></div>
+    <button id="restart-btn" onclick="resetGame()">Restart Game</button>
 
     <script>
-        const canvas = document.getElementById("snake");
+        const canvas = document.getElementById("snakeGame");
         const ctx = canvas.getContext("2d");
-        const box = 20;
-        let snake = [{ x: 9 * box, y: 10 * box }];
-        let food = { x: Math.floor(Math.random() * 19 + 1) * box, y: Math.floor(Math.random() * 19 + 1) * box };
-        let score = 0;
-        let d;
+        const scoreElement = document.getElementById("score");
+        const highScoreElement = document.getElementById("highScore");
+        const restartBtn = document.getElementById("restart-btn");
 
-        document.addEventListener("keydown", direction);
-        function direction(event) {
-            if(event.keyCode == 37 && d != "RIGHT") d = "LEFT";
-            else if(event.keyCode == 38 && d != "DOWN") d = "UP";
-            else if(event.keyCode == 39 && d != "LEFT") d = "RIGHT";
-            else if(event.keyCode == 40 && d != "UP") d = "DOWN";
+        const box = 20; // Size of one square
+        let snake, food, direction, score, gameInterval, highScore;
+        let hue = 0; // For dynamic color
+        let foodPulse = 0; // For pulsing food effect
+        let touchStartX, touchStartY; // For touch controls
+
+        // Load high score from localStorage
+        highScore = localStorage.getItem("neonSnakeHighScore") || 0;
+        highScoreElement.innerText = highScore;
+
+        function init() {
+            snake = [{ x: 9 * box, y: 10 * box }];
+            food = generateFood(); // Ensure food doesn't spawn on snake
+            direction = "RIGHT";
+            score = 0;
+            scoreElement.innerText = score;
+            restartBtn.style.display = "none";
+            if (gameInterval) clearInterval(gameInterval);
+            gameInterval = setInterval(draw, Math.max(80, 120 - Math.floor(score / 5) * 10)); // Speed up as score increases
+        }
+
+        // Generate food that doesn't overlap snake
+        function generateFood() {
+            let newFood;
+            do {
+                newFood = {
+                    x: Math.floor(Math.random() * 19 + 1) * box,
+                    y: Math.floor(Math.random() * 19 + 1) * box
+                };
+            } while (collision(newFood, snake));
+            return newFood;
+        }
+
+        document.addEventListener("keydown", changeDirection);
+
+        // Touch controls for mobile
+        canvas.addEventListener("touchstart", (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        });
+
+        canvas.addEventListener("touchend", (e) => {
+            if (!touchStartX || !touchStartY) return;
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                // Horizontal swipe
+                if (diffX > 0 && direction !== "LEFT") direction = "RIGHT";
+                else if (diffX < 0 && direction !== "RIGHT") direction = "LEFT";
+            } else {
+                // Vertical swipe
+                if (diffY > 0 && direction !== "UP") direction = "DOWN";
+                else if (diffY < 0 && direction !== "DOWN") direction = "UP";
+            }
+        });
+
+        function changeDirection(event) {
+            if (event.keyCode == 37 && direction != "RIGHT") direction = "LEFT";
+            else if (event.keyCode == 38 && direction != "DOWN") direction = "UP";
+            else if (event.keyCode == 39 && direction != "LEFT") direction = "RIGHT";
+            else if (event.keyCode == 40 && direction != "UP") direction = "DOWN";
         }
 
         function draw() {
-            ctx.fillStyle = "black";
+            // Background blur effect for motion trail
+            ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            for(let i = 0; i < snake.length; i++) {
-                ctx.fillStyle = (i == 0) ? "green" : "lime";
+
+            for (let i = 0; i < snake.length; i++) {
+                // Dynamic Snake Color
+                ctx.fillStyle = `hsl(${hue + (i * 10)}, 100%, 50%)`;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = `hsl(${hue}, 100%, 50%)`;
                 ctx.fillRect(snake[i].x, snake[i].y, box, box);
+                ctx.shadowBlur = 0; // Reset blur
             }
-            ctx.fillStyle = "red";
-            ctx.fillRect(food.x, food.y, box, box);
+
+            // Draw Food with pulsing effect
+            const pulseSize = box + Math.sin(foodPulse) * 5; // Shrink/grow
+            ctx.fillStyle = "white";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#ffffff";
+            ctx.fillRect(food.x - (pulseSize - box) / 2, food.y - (pulseSize - box) / 2, pulseSize, pulseSize);
+            ctx.shadowBlur = 0;
+            foodPulse += 0.1; // Animate pulse
 
             let snakeX = snake[0].x;
             let snakeY = snake[0].y;
 
-            if( d == "LEFT") snakeX -= box;
-            if( d == "UP") snakeY -= box;
-            if( d == "RIGHT") snakeX += box;
-            if( d == "DOWN") snakeY += box;
+            if (direction == "LEFT") snakeX -= box;
+            if (direction == "UP") snakeY -= box;
+            if (direction == "RIGHT") snakeX += box;
+            if (direction == "DOWN") snakeY += box;
 
-            if(snakeX == food.x && snakeY == food.y) {
+            // Check if snake eats food
+            if (snakeX == food.x && snakeY == food.y) {
                 score++;
-                food = { x: Math.floor(Math.random() * 19 + 1) * box, y: Math.floor(Math.random() * 19 + 1) * box };
+                scoreElement.innerText = score;
+                if (score > highScore) {
+                    highScore = score;
+                    highScoreElement.innerText = highScore;
+                    localStorage.setItem("neonSnakeHighScore", highScore);
+                }
+                food = generateFood();
             } else {
                 snake.pop();
             }
 
             let newHead = { x: snakeX, y: snakeY };
 
-            if(snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
-                clearInterval(game);
-                alert("Game Over! Score: " + score);
-                location.reload();
+            // Game Over Conditions
+            if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
+                clearInterval(gameInterval);
+                restartBtn.style.display = "block";
+                alert("Game Over! Your Score: " + score + " | High Score: " + highScore);
             }
+
             snake.unshift(newHead);
+            hue += 2; // Change color every frame
         }
 
         function collision(head, array) {
-            for(let i = 0; i < array.length; i++) {
-                if(head.x == array[i].x && head.y == array[i].y) return true;
+            for (let i = 0; i < array.length; i++) {
+                if (head.x == array[i].x && head.y == array[i].y) return true;
             }
             return false;
         }
-        let game = setInterval(draw, 100);
+
+        function resetGame() {
+            init();
+        }
+
+        init(); // Start the game
     </script>
 </body>
 </html>
