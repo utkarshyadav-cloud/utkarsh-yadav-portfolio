@@ -3,219 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>utkarsh from invertis university</title>
+    <title>Utkarsh Yadav - Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* CSS for Styling and Animations */
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
-            background: #0f0f0f;
-            color: white;
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
+            padding: 0;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow-x: hidden;
         }
-
-        h1 {
-            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
-            margin-bottom: 10px;
-        }
-
-        #game-container {
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-align: center;
+            padding: 3rem 1rem;
             position: relative;
-            border: 5px solid #333;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+            animation: fadeInDown 1s ease-out;
+        }
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            animation: slideInLeft 1.5s ease-out;
+        }
+        header p {
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+            animation: slideInRight 1.5s ease-out;
+        }
+        nav {
+            background: rgba(68, 68, 68, 0.9);
+            text-align: center;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: fadeIn 2s ease-out;
+        }
+        nav a {
+            color: #fff;
+            margin: 0 1.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        nav a:hover {
+            color: #ffd700;
+            transform: translateY(-5px);
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background-color: #ffd700;
+            transition: all 0.3s ease;
+        }
+        nav a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        section {
+            padding: 3rem 2rem;
+            margin: 2rem auto;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeInUp 1s ease-out;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+        section.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        h2::before {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        li {
+            margin: 1rem;
+            padding: 1rem;
+            background: #f9f9f9;
             border-radius: 10px;
-            touch-action: none; /* Prevent scrolling on touch */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 200px;
+            text-align: center;
         }
-
-        canvas {
-            display: block;
-            background-color: #000;
+        li:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-
-        .stats {
-            margin-top: 15px;
-            font-size: 24px;
-            font-weight: bold;
+        li i {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 0.5rem;
         }
-
-        #restart-btn {
-            margin-top: 15px;
-            padding: 10px 25px;
-            font-size: 18px;
-            background: #00ff00;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 1s;
-            display: none;
+        .project {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f4f4f4;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
         }
-
-        #restart-btn:hover {
-            background: #00cc00;
-            transform: scale(1.1);
+        .project:hover {
+            transform: scale(1.05);
+        }
+        .project h3 {
+            color: #667eea;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            animation: fadeIn 2s ease-out;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            nav a { margin: 0 0.5rem; }
+            ul { flex-direction: column; align-items: center; }
+            li { width: 80%; }
         }
     </style>
 </head>
 <body>
-
-    <h1>neon snake</h1>
-    <div id="game-container">
-        <canvas id="snakeGame" width="400" height="400"></canvas>
-    </div>
+    <header>
+        <h1>Utkarsh Yadav</h1>
+        <p>BTech CSE Student | Invertis University, Bareilly | From Ayodhya</p>
+    </header>
     
-    <div class="stats">Score: <span id="score">0</span> | High Score: <span id="highScore">0</span></div>
-    <button id="restart-btn" onclick="resetGame()">Restart Game</button>
+    <nav>
+        <a href="#about"><i class="fas fa-user"></i> About</a>
+        <a href="#skills"><i class="fas fa-tools"></i> Skills</a>
+        <a href="#projects"><i class="fas fa-project-diagram"></i> Projects</a>
+        <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+    </nav>
+    
+    <section id="about" class="animate">
+        <h2>About Me</h2>
+        <p>Hello! I'm Utkarsh Yadav, a passionate BTech CSE student at Invertis University in Bareilly. Originally from Ayodhya, I'm eager to build innovative solutions in software development. I love coding, problem-solving, and exploring new technologies. Let's connect and create something amazing!</p>
+    </section>
+    
+    <section id="skills" class="animate">
+        <h2>Skills</h2>
+        <ul>
+            <li><i class="fas fa-code"></i><br>Programming: C++, Java, Python</li>
+            <li><i class="fas fa-globe"></i><br>Web Development: HTML, CSS, JavaScript</li>
+            <li><i class="fas fa-database"></i><br>Databases: MySQL</li>
+            <li><i class="fas fa-wrench"></i><br>Tools: Git, VS Code</li>
+        </ul>
+    </section>
 
+    
+    <section id="projects" class="animate">
+        <h2>Projects</h2>
+        <div class="project">
+            <h3><i class="fas fa-laptop-code"></i> Project 1: Personal Portfolio Website</h3>
+            <p>A responsive, animated website showcasing my skills and projects. Built with HTML, CSS, and JS for a professional look.</p>
+        </div>
+        <div class="project">
+            <h3><i class="fas fa-calculator"></i> Project 2: Neon Snake Game Website</h3>
+            <p>A basic snake game using html,css,python.</p>
+            <p><i class="fas fa-neon snake game"></i> neon snake game link : <a href="https://snake-game-python-by-utkarsh.vercel.app/" target="_blank">https://snake-game-python-by-utkarsh.vercel.app/</a></p>
+        </div>
+        <!-- Add more projects as needed -->
+    </section>
+    
+    <section id="contact" class="animate">
+        <h2>Contact</h2>
+        <p><i class="fas fa-envelope"></i> Email: <a href="mailto:utkarshyadavayodhya16@gmail.com">utkarshyadavayodhya16@gmail.com</a></p>
+        <p><i class="fab fa-linkedin"></i> LinkedIn: <a href="https://linkedin.com/in/utkarsh-yadav-777coder" target="_blank">linkedin.com/in/utkarsh-yadav-777coder</a></p>
+        <p><i class="fab fa-github"></i> GitHub: <a href="https://github.com/utkarshyadav-cloud" target="_blank">github.com/utkarsh-yadav</a></p>
+    </section>
+    
+    <footer>
+        <p>&copy; 2023 Utkarsh Yadav. All rights reserved. | Made with <i class="fas fa-heart" style="color: #ff6b6b;"></i></p>
+    </footer>
+    
     <script>
-        const canvas = document.getElementById("snakeGame");
-        const ctx = canvas.getContext("2d");
-        const scoreElement = document.getElementById("score");
-        const highScoreElement = document.getElementById("highScore");
-        const restartBtn = document.getElementById("restart-btn");
-
-        const box = 20; // Size of one square
-        let snake, food, direction, score, gameInterval, highScore;
-        let hue = 0; // For dynamic color
-        let foodPulse = 0; // For pulsing food effect
-        let touchStartX, touchStartY; // For touch controls
-
-        // Load high score from localStorage
-        highScore = localStorage.getItem("neonSnakeHighScore") || 0;
-        highScoreElement.innerText = highScore;
-
-        function init() {
-            snake = [{ x: 9 * box, y: 10 * box }];
-            food = generateFood(); // Ensure food doesn't spawn on snake
-            direction = "RIGHT";
-            score = 0;
-            scoreElement.innerText = score;
-            restartBtn.style.display = "none";
-            if (gameInterval) clearInterval(gameInterval);
-            gameInterval = setInterval(draw, Math.max(80, 120 - Math.floor(score / 5) * 10)); // Speed up as score increases
-        }
-
-        // Generate food that doesn't overlap snake
-        function generateFood() {
-            let newFood;
-            do {
-                newFood = {
-                    x: Math.floor(Math.random() * 19 + 1) * box,
-                    y: Math.floor(Math.random() * 19 + 1) * box
-                };
-            } while (collision(newFood, snake));
-            return newFood;
-        }
-
-        document.addEventListener("keydown", changeDirection);
-
-        // Touch controls for mobile
-        canvas.addEventListener("touchstart", (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
         });
-
-        canvas.addEventListener("touchend", (e) => {
-            if (!touchStartX || !touchStartY) return;
-            const touchEndX = e.changedTouches[0].clientX;
-            const touchEndY = e.changedTouches[0].clientY;
-            const diffX = touchEndX - touchStartX;
-            const diffY = touchEndY - touchStartY;
-            if (Math.abs(diffX) > Math.abs(diffY)) {
-                // Horizontal swipe
-                if (diffX > 0 && direction !== "LEFT") direction = "RIGHT";
-                else if (diffX < 0 && direction !== "RIGHT") direction = "LEFT";
-            } else {
-                // Vertical swipe
-                if (diffY > 0 && direction !== "UP") direction = "DOWN";
-                else if (diffY < 0 && direction !== "DOWN") direction = "UP";
-            }
-        });
-
-        function changeDirection(event) {
-            if (event.keyCode == 37 && direction != "RIGHT") direction = "LEFT";
-            else if (event.keyCode == 38 && direction != "DOWN") direction = "UP";
-            else if (event.keyCode == 39 && direction != "LEFT") direction = "RIGHT";
-            else if (event.keyCode == 40 && direction != "UP") direction = "DOWN";
-        }
-
-        function draw() {
-            // Background blur effect for motion trail
-            ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            for (let i = 0; i < snake.length; i++) {
-                // Dynamic Snake Color
-                ctx.fillStyle = `hsl(${hue + (i * 10)}, 100%, 50%)`;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = `hsl(${hue}, 100%, 50%)`;
-                ctx.fillRect(snake[i].x, snake[i].y, box, box);
-                ctx.shadowBlur = 0; // Reset blur
-            }
-
-            // Draw Food with pulsing effect
-            const pulseSize = box + Math.sin(foodPulse) * 5; // Shrink/grow
-            ctx.fillStyle = "white";
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = "#ffffff";
-            ctx.fillRect(food.x - (pulseSize - box) / 2, food.y - (pulseSize - box) / 2, pulseSize, pulseSize);
-            ctx.shadowBlur = 0;
-            foodPulse += 0.1; // Animate pulse
-
-            let snakeX = snake[0].x;
-            let snakeY = snake[0].y;
-
-            if (direction == "LEFT") snakeX -= box;
-            if (direction == "UP") snakeY -= box;
-            if (direction == "RIGHT") snakeX += box;
-            if (direction == "DOWN") snakeY += box;
-
-            // Check if snake eats food
-            if (snakeX == food.x && snakeY == food.y) {
-                score++;
-                scoreElement.innerText = score;
-                if (score > highScore) {
-                    highScore = score;
-                    highScoreElement.innerText = highScore;
-                    localStorage.setItem("neonSnakeHighScore", highScore);
+        
+        // Animate sections on scroll
+        const sections = document.querySelectorAll('section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
                 }
-                food = generateFood();
-            } else {
-                snake.pop();
-            }
-
-            let newHead = { x: snakeX, y: snakeY };
-
-            // Game Over Conditions
-            if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
-                clearInterval(gameInterval);
-                restartBtn.style.display = "block";
-                alert("Game over laadle! Your Score: " + score + " | High Score: " + highScore);
-            }
-
-            snake.unshift(newHead);
-            hue += 2; // Change color every frame
-        }
-
-        function collision(head, array) {
-            for (let i = 0; i < array.length; i++) {
-                if (head.x == array[i].x && head.y == array[i].y) return true;
-            }
-            return false;
-        }
-
-        function resetGame() {
-            init();
-        }
-
-        init(); // Start the game
+            });
+        });
+        sections.forEach(section => observer.observe(section));
     </script>
 </body>
 </html>
-
-
-
